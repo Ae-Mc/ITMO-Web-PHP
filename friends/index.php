@@ -10,44 +10,41 @@
     if(!$authentificated)
         header("Location: http://$host$uri/$extra");
     $auth = new Auth();
-    $user = $auth->getCurrentUser();
-    if (is_bool($user)) {
-        header("Location: http://$host$uri/$extra");
-    }
-    if (!isset($_GET['id'])) {
-        $user_id = $user->id;
-    } else {
+    $currentUser = $auth->getCurrentUser();
+    if (isset($_GET['id'])) {
         $user_id = $_GET['id'];
-    }
+        $user = (new MySQLUser())->getUser($user_id);
+    } 
 ?>
 
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Главная</title>
+    <title>Друзья</title>
+</script>
 </head>
 <body>
     <a href="/" style="position: fixed; top: 2em; left: 2em;">
         <button>На главную</button>
     </a>
     <center>
+        <div style="display: inline-block; text-align: left;">
         <br>
         <?php
-            function buildImage(PhotoModel $model) {
-                $photo = base64_encode($model->photo_blob);
-                return "<img src=\"data:$model->mime_type;base64, $photo\">";
+            echo 'Список друзей: ';
+            function buildUser(UserModel $user) {
+                return "<li><a href='/users/?id=$user->id'>$user->username</a></li>";
             }
-            $photos = $auth->getUserPhotos($user_id);
-            foreach($photos as $photo) {
-                echo buildImage($photo);
-                echo "<br>$photo->title<br><br>";
+            $friends = $auth->getFriends();
+            echo '<ul>';
+            foreach($friends as $user) {
+                echo buildUser($user);
             }
-            if (!isset($_GET['id'])) {
-                echo '<br><a href="/add_image/"><button>Добавить фото</button></a>';
-            }
+            echo '</ul>';
         ?>
         <br>
+        </div>
     </center>
 </body>
 </html>

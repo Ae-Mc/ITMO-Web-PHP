@@ -10,23 +10,24 @@ class MySQLPhoto extends MySQLBase {
 
     function _initQueries() {
         $this->addPhotoQuery = $this->_prepareQuery(
-            "INSERT INTO insta_photo (`user_id`, `photo`, `mime_type`)"
-            . " VALUES((?), (?), (?))");
+            "INSERT INTO insta_photo (`user_id`, `title`, `photo`, `mime_type`)"
+            . " VALUES((?), (?), (?), (?))");
 
         $this->getUserPhotosQuery = $this->_prepareQuery(
-            "SELECT photo, mime_type, publication_date FROM insta_photo"
+            "SELECT photo, title, mime_type, publication_date FROM insta_photo"
             . " WHERE user_id=(?)");
     }
 
-    function addPhoto(int $user_id, string $photo_blob, string $mime_type) {
+    function addPhoto(int $user_id, string $title, string $photo_blob, string $mime_type) {
         $this->addPhotoQuery->bind_param(
-            'ibs',
+            'isbs',
             $user_id,
+            $title,
             $user_id,
             $mime_type
         );
 
-        $this->addPhotoQuery->send_long_data(1, $photo_blob);
+        $this->addPhotoQuery->send_long_data(2, $photo_blob);
         $this->addPhotoQuery->execute();
         return $this->addPhotoQuery->errno;
     }
@@ -45,6 +46,7 @@ class MySQLPhoto extends MySQLBase {
             $photos[] = new PhotoModel(
                 0,
                 $user_id,
+                $row['title'],
                 $row['photo'],
                 $row['mime_type'],
                 new DateTime($row['publication_date']));

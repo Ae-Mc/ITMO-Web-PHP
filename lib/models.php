@@ -15,6 +15,7 @@ class UserModel {
 class PhotoModel {
     public int $id;
     public int $user_id;
+    public string $title;
     public string $photo_blob;
     public string $mime_type;
     public DateTime $publicationDate;
@@ -22,11 +23,13 @@ class PhotoModel {
     function __construct(
             int $id,
             int $user_id,
+            string $title,
             string $photo_blob,
             string $mime_type,
             DateTime $publicationDate) {
         $this->id = $id;
         $this->user_id = $user_id;
+        $this->title = $title;
         $this->mime_type = $mime_type;
         $this->photo_blob = $photo_blob;
         $this->publicationDate = $publicationDate;

@@ -106,9 +106,9 @@ class Auth {
         }
     }
 
-    function addPhoto(string $photoBlob, string $mimeType): string|bool {
+    function addPhoto(string $title, string $photoBlob, string $mimeType): string|bool {
         $user = $this->getCurrentUser();
-        $result = $this->mysqlPhoto->addPhoto($user->id, $photoBlob, $mimeType);
+        $result = $this->mysqlPhoto->addPhoto($user->id, $title, $photoBlob, $mimeType);
         if ($result != 0) {
             switch ($result) {
                 case 1406:

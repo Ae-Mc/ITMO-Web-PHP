@@ -17,8 +17,9 @@
     if (isset($_FILES['image'])) {
         if (in_array($_FILES['image']['type'], acceptedImageTypes)) {
             if(is_string($result = $auth->addPhoto(
+                $_POST['title'],
                 file_get_contents($_FILES['image']['tmp_name']),
-                $_FILES['image']['type']
+                $_FILES['image']['type'],
             ))) {
                 $error = $result;
             }
@@ -41,10 +42,11 @@
     <center>
         <form  method="post" enctype="multipart/form-data">
             <input type="file" name="image">
+            <br><input type="text" name="title" placeholder="Название">
             <?php if (isset($error)) {?>
             <b><span style="color: red;"><?php echo $error; ?></span></b>
             <?php } ?>
-            <input type="submit">
+            <br><input type="submit">
         </form>
         <a href="/"><button>На главную</button></a>
     </center>

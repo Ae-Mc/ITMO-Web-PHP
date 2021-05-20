@@ -2,6 +2,15 @@
 
 Сайт, созданный в рамках прохождения курса по WEB программированию в ФСПО ИТМО.
 
+### Требования:
+
+- MySQL
+- PHP 8.0+
+
+### Установка
+- Развернуть базу данных из дампа database_dump.sql
+- Настроить соединение с базой данных в файлах [lib/mysql/base.php](https://github.com/Ae-Mc/ITMO-Web-PHP/blob/f3aa6f4a450622cce616a9d48b7b62aefebf8117/lib/mysql/base.php#L7) и [lib/auth_functions.php](https://github.com/Ae-Mc/ITMO-Web-PHP/blob/f643363b0c44b52517a59c137d964cfc2b5fdc76/lib/auth_functions.php#L16)
+
 ### Функционал:
 
 - Регистрация

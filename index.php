@@ -26,6 +26,7 @@
         <span>Имя пользователя: <b><? echo $user->username; ?></b></span>
         <br><span>Дата регистрации: <b><? echo $user->registrationDate->format('Y-m-d H:i:s'); ?></b></span>
         <br><a href="/gallery/"><button>Галерея</button></a>
+        <br><a href="/users/"><button>Список пользователей</button></a>
         <br><a href="/logout/"><button>Выйти</button></a>
     </center>
 </body>

@@ -11,15 +11,9 @@
     if(!$authentificated)
         header("Location: http://$host$uri/$extra");
     if (isset($_GET['id'])) {
-        $auth = new Auth();
-        $user = $auth->getCurrentUser();
-        if (is_bool($user)) {
-            header("Location: http://$host$uri/$extra");
-        }
-        $user_id = $user->id;
-    } else {
         $user_id = $_GET['id'];
-    }
+        $user = (new MySQLUser())->getUser($user_id);
+    } 
 ?>
 
 <html lang="ru">
@@ -33,20 +27,30 @@
         <button>На главную</button>
     </a>
     <center>
+        <div style="display: inline-block; text-align: left;">
         <br>
         <?php
-            function buildImage(string $photoBlob, string $mimeType) {
-                $photo = base64_encode($photoBlob);
-                return "<img src=\"data:$mimeType;base64, $photo\">";
-            }
-            $photos = $auth->getUserPhotos($user_id);
-            foreach($photos as $photo) {
-                echo buildImage($photo->photo_blob, $photo->mime_type);
-                echo '<br><br>';
+            if (isset($user_id)) {
+        ?>
+                <span>Имя пользователя: <b><? echo $user->username; ?></b></span>
+                <br><span>Дата регистрации: <b><? echo $user->registrationDate->format('Y-m-d H:i:s'); ?></b></span>
+                <br><a href="/gallery/?id=<? echo $user->id; ?>"><button>Галерея</button></a>
+        <?php
+            } else {
+                echo 'Список пользователей: ';
+                function buildUser(UserModel $user) {
+                    return "<li><a href='/users/?id=$user->id'>$user->username</a></li>";
+                }
+                $users = (new MySQLUser())->getUsers();
+                echo '<ul>';
+                foreach($users as $user) {
+                    echo buildUser($user);
+                }
+                echo '</ul>';
             }
         ?>
-        <br><a href="/add_image/"><button>Добавить фото</button></a>
         <br>
+        </div>
     </center>
 </body>
 </html>

@@ -135,5 +135,14 @@ class Auth {
         }
         return $result;
     }
+
+    function addFriend(int $friend_id): int {
+        if ($this->user_id != -1) {
+            $user_id = $this->getCurrentUser()->id;
+        } else {
+            $user_id = $this->user_id;
+        }
+        return $this->mysqlUser->addFriend($user_id, $friend_id);
+    }
 }
 ?>

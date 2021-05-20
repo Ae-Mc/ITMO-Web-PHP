@@ -7,6 +7,7 @@ class MySQLUser extends MySQLBase {
     public mysqli_stmt $getUsersQuery;
     public mysqli_stmt $getUserByIDQuery;
     public mysqli_stmt $getUserIDByUsernameQuery;
+    public mysqli_stmt $addFriendQuery;
 
     function _initQueries() {
         $this->getUserByIDQuery = $this->_prepareQuery(
@@ -15,6 +16,8 @@ class MySQLUser extends MySQLBase {
             "SELECT id FROM insta_user WHERE username=(?) LIMIT 1");
         $this->getUsersQuery = $this->_prepareQuery(
             "SELECT id, username, registration_date FROM insta_user");
+        $this->addFriendQuery = $this->_prepareQuery(
+            "INSERT INTO insta_friend (user_id, friend_id) VALUES ((?), (?))");
     }
 
     function getUsers(): array {
@@ -68,6 +71,14 @@ class MySQLUser extends MySQLBase {
             return false;
         }
         return $user_id;
+    }
+
+    function addFriend(int $user_id, int $friend_id): int {
+        $this->addFriendQuery->bind_param('ii', $user_id, $friend_id);
+        # $this->addFriendQuery->execute();
+        # $this->addFriendQuery->bind_param('ii', $friend_id, $user_id);
+        $this->addFriendQuery->execute();
+        return $this->addFriendQuery->errno;
     }
 }
 ?>

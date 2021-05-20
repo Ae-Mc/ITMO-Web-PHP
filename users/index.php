@@ -21,6 +21,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Главная</title>
+<script>
+window.addEventListener("load", function() {
+    e = document.getElementById('addFriend');
+    e.onclick = function () {
+        var xhr = new XMLHttpRequest()
+        <?php 
+        echo "xhr.open('GET', '/api/add_friend.php?id=$user_id');";
+        ?>
+        xhr.send()
+    }
+});
+</script>
 </head>
 <body>
     <a href="/" style="position: fixed; top: 2em; left: 2em;">
@@ -34,6 +46,7 @@
         ?>
                 <span>Имя пользователя: <b><? echo $user->username; ?></b></span>
                 <br><span>Дата регистрации: <b><? echo $user->registrationDate->format('Y-m-d H:i:s'); ?></b></span>
+                <br><button id="addFriend">Добавить в друзья</button>
                 <br><a href="/gallery/?id=<? echo $user->id; ?>"><button>Галерея</button></a>
         <?php
             } else {

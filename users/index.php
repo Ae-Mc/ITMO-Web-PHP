@@ -1,5 +1,4 @@
 <?php 
-    # TODO: сделать список пользователей
     include_once "{$_SERVER['DOCUMENT_ROOT']}/lib/constants.php";
     include_once authFilePath;
     include_once modelsFilePath;
@@ -15,6 +14,7 @@
     if (isset($_GET['id'])) {
         $user_id = $_GET['id'];
         $user = (new MySQLUser())->getUser($user_id);
+        $isFriend = $auth->isFriend($user_id);
     } 
 ?>
 
@@ -22,23 +22,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Главная</title>
+    <title><?php
+    if (isset($user)) {
+        echo $user->username;
+    } else {
+        echo 'Пользователи';
+    }
+?></title>
 <?php
-if (isset($user_id) && $currentUser->id != $user_id && !$auth->isFriend($user_id)) {
+if (isset($user_id) && $currentUser->id != $user_id) {
 ?>
 <script>
+<?php
+$isFriendStr = $isFriend ? 'true' : 'false';
+echo "isFriend = $isFriendStr;\n";
+echo "userID = $user_id;\n";
+?>
 window.addEventListener("load", function() {
-    e = document.getElementById('addFriend');
-    e.onclick = function () {
+    friendButton = document.getElementById('friendButton');
+    friendButtonTexts = {
+        true: 'Удалить из друзей',
+        false: 'Добавить в друзья',
+    };
+    friendButton.onclick = function () {
         var xhr = new XMLHttpRequest()
-        <?php 
-        echo "xhr.open('GET', '/api/add_friend.php?id=$user_id');";
-        ?>
+        if (isFriend) {
+            xhr.open('GET', '/api/remove_friend.php?id=' + userID);
+        } else {
+            xhr.open('GET', '/api/add_friend.php?id=' + userID);
+        }
+        isFriend = !isFriend;
+        friendButton.innerHTML = friendButtonTexts[isFriend];
         xhr.send()
-        e.hidden = true
     }
 });
-<?php } ?>
+<?php
+}
+?>
 </script>
 </head>
 <body>
@@ -54,8 +74,14 @@ window.addEventListener("load", function() {
                 <span>Имя пользователя: <b><? echo $user->username; ?></b></span>
                 <br><span>Дата регистрации: <b><? echo $user->registrationDate->format('Y-m-d H:i:s'); ?></b></span>
         <?php 
-            if ($currentUser->id != $user_id && !$auth->isFriend($user_id)) {
-                echo '<br><button id="addFriend">Добавить в друзья</button>';
+            if ($currentUser->id != $user_id) {
+                echo '<br><button id="friendButton">';
+                if ($isFriend) {
+                    echo 'Удалить из друзей';
+                } else {
+                    echo 'Добавить в друзья';
+                }
+                echo '</button>';
             }
         ?>
                 <br><a href="/gallery/?id=<? echo $user->id; ?>"><button>Галерея</button></a>

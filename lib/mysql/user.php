@@ -8,6 +8,8 @@ class MySQLUser extends MySQLBase {
     public mysqli_stmt $getUserByIDQuery;
     public mysqli_stmt $getUserIDByUsernameQuery;
     public mysqli_stmt $addFriendQuery;
+    public mysqli_stmt $removeFriendQuery;
+    public mysqli_stmt $getFriendsQuery;
     public mysqli_stmt $isFriendQuery;
 
     function _initQueries() {
@@ -19,26 +21,19 @@ class MySQLUser extends MySQLBase {
             "SELECT id, username, registration_date FROM insta_user");
         $this->addFriendQuery = $this->_prepareQuery(
             "INSERT INTO insta_friend (user_id, friend_id) VALUES ((?), (?))");
+        $this->removeFriendQuery = $this->_prepareQuery(
+            "DELETE FROM insta_friend WHERE user_id=(?) AND friend_id=(?)");
+        $this->getFriendsQuery = $this->_prepareQuery(
+            "SELECT id, username, registration_date FROM insta_user"
+            . " WHERE id IN (select friend_id from insta_friend where user_id=(?))");
         $this->isFriendQuery = $this->_prepareQuery(
             "SELECT id FROM insta_friend WHERE user_id=(?) AND friend_id=(?) LIMIT 1");
     }
 
-    function getUsers(): array {
+    function getUsers(): array|false {
         $this->getUsersQuery->execute();
         $result = $this->getUsersQuery->get_result();
-        $users = [];
-        if (is_bool($result)) {
-            return false;
-        }
-        for($i = 0; $i < $result->num_rows; $i++) {
-            $result->data_seek($i);
-            $row = $result->fetch_assoc();
-            $users[] = new UserModel(
-                $row['id'],
-                $row['username'],
-                new DateTime($row['registration_date']));
-        }
-        return $users;
+        return $this->_parseUsersResponse($result);
     }
 
     function getUser(int $user_id): UserModel|false {
@@ -84,6 +79,19 @@ class MySQLUser extends MySQLBase {
         return $this->addFriendQuery->errno;
     }
 
+    function removeFriend(int $user_id, int $friend_id): int {
+        $this->removeFriendQuery->bind_param('ii', $user_id, $friend_id);
+        $this->removeFriendQuery->execute();
+        return $this->removeFriendQuery->errno;
+    }
+
+    function getFriends(int $user_id): array|false {
+        $this->getFriendsQuery->bind_param('i', $user_id);
+        $this->getFriendsQuery->execute();
+        $result = $this->getFriendsQuery->get_result();
+        return $this->_parseUsersResponse($result);
+    }
+
     function isFriend(int $user_id, int $friend_id): bool {
         $this->isFriendQuery->bind_param('ii', $user_id, $friend_id);
         $this->isFriendQuery->execute();
@@ -91,6 +99,22 @@ class MySQLUser extends MySQLBase {
             return true;
         }
         return false;
+    }
+
+    function _parseUsersResponse(mysqli_result|false $response): array|false {
+        $users = [];
+        if (is_bool($response)) {
+            return false;
+        }
+        for($i = 0; $i < $response->num_rows; $i++) {
+            $response->data_seek($i);
+            $row = $response->fetch_assoc();
+            $users[] = new UserModel(
+                $row['id'],
+                $row['username'],
+                new DateTime($row['registration_date']));
+        }
+        return $users;
     }
 }
 ?>

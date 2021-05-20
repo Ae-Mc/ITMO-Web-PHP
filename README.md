@@ -9,10 +9,14 @@
 - Авторизация
     > ![](https://user-images.githubusercontent.com/43097289/118631886-97a62880-b7d8-11eb-9d76-5d976cddc7f6.png)
 - Добавление фото
-    > ![image](https://user-images.githubusercontent.com/43097289/118632490-22872300-b7d9-11eb-9147-f2660ce6c5fb.png)
-- Просмотр галереи (WIP)
-    > ![](https://user-images.githubusercontent.com/43097289/118631782-80673b00-b7d8-11eb-92f7-9441c487acfe.png)
+    > ![image](https://user-images.githubusercontent.com/43097289/119030379-7c8f1080-b9b2-11eb-9bb1-8c5df7eaaa50.png)
+- Просмотр галереи
+    > ![image](https://user-images.githubusercontent.com/43097289/119030338-697c4080-b9b2-11eb-8064-8b882d58e968.png)
 - Просмотр своего профиля
-    > ![](https://user-images.githubusercontent.com/43097289/118631462-31b9a100-b7d8-11eb-9016-17875d65a435.png)
-- Просмотр чужого профиля (WIP)
-- Просмотр пользователей (WIP)
+    > ![image](https://user-images.githubusercontent.com/43097289/119030469-97fa1b80-b9b2-11eb-8cb1-91843a70da80.png)
+- Просмотр чужого профиля
+    > ![image](https://user-images.githubusercontent.com/43097289/119030500-a3e5dd80-b9b2-11eb-93d1-6c74d848eb59.png)
+- Просмотр друзей
+    > ![image](https://user-images.githubusercontent.com/43097289/119030542-b19b6300-b9b2-11eb-816c-32bd2f17afbb.png)
+- Просмотр пользователей
+    > ![image](https://user-images.githubusercontent.com/43097289/119030561-b95b0780-b9b2-11eb-8544-f2491b7e8f83.png)

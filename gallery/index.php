@@ -9,12 +9,12 @@
     $extra = 'login/';
     if(!$authentificated)
         header("Location: http://$host$uri/$extra");
+    $auth = new Auth();
+    $user = $auth->getCurrentUser();
+    if (is_bool($user)) {
+        header("Location: http://$host$uri/$extra");
+    }
     if (!isset($_GET['id'])) {
-        $auth = new Auth();
-        $user = $auth->getCurrentUser();
-        if (is_bool($user)) {
-            header("Location: http://$host$uri/$extra");
-        }
         $user_id = $user->id;
     } else {
         $user_id = $_GET['id'];
@@ -43,8 +43,10 @@
                 echo buildImage($photo->photo_blob, $photo->mime_type);
                 echo '<br><br>';
             }
+            if (!isset($_GET['id'])) {
+                echo '<br><a href="/add_image/"><button>Добавить фото</button></a>';
+            }
         ?>
-        <br><a href="/add_image/"><button>Добавить фото</button></a>
         <br>
     </center>
 </body>
